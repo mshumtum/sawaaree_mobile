@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,26 +8,26 @@ import {
   Image,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import SearchInput from '../components/SeachInput';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import IMAGES from '../assets/images';
-import HomepageLocButton from '../components/HomepageLocButton';
-import {openDrawer} from '../navigation/NavigationService';
+
+import SearchInput from '../../components/SeachInput';
+import IMAGES from '../../assets/images';
+import HomepageLocButton from '../../components/HomepageLocButton';
+import {navigate, openDrawer} from '../../navigation/NavigationService';
+import HomeMapView from '../../components/HomeMapView';
+import NearbySheets from './sheets/NearbySheets';
+import {
+  getAddressFromLatLng,
+  getNearbyLocations,
+} from '../../store/slices/bookingSlice';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 
 const HomeScreen = () => {
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['30%', '60%', '90%'], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+  const dispatch = useAppDispatch();
+  const {myLocation} = useAppSelector(state => state.booking);
+  const [nearbyLocations, setNearbyLocations] = useState([]);
+  useEffect(() => {
+    dispatch(getNearbyLocations());
   }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -43,34 +43,19 @@ const HomeScreen = () => {
         <HomepageLocButton
           isLiveLocation={true}
           value="Your current location"
-        />
-      </View>
-      <View style={styles.mapContainer}>
-        <MapView
-          provider={'google'}
-          style={styles.map}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+          onPress={() => {
+            console.log('myLocation>>>', myLocation);
+
+            navigate('SearchLocForBook', {
+              fromLocationData: myLocation,
+            });
           }}
         />
       </View>
-
-      <BottomSheet
-        index={0}
-        snapPoints={snapPoints}
-        ref={bottomSheetRef}
-        onChange={handleSheetChanges}>
-        <BottomSheetScrollView style={styles.contentContainer}>
-          <HomepageLocButton
-            dynamicIcon={IMAGES.searchIcon}
-            value="Your current location"
-          />
-          <Text>Nearby location</Text>
-        </BottomSheetScrollView>
-      </BottomSheet>
+      <View style={styles.mapContainer}>
+        <HomeMapView />
+      </View>
+      <NearbySheets />
     </View>
   );
 };
@@ -86,10 +71,7 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  contentContainer: {
-    flex: 1,
-    padding: 16,
-  },
+
   locationContainer: {
     gap: 16,
   },

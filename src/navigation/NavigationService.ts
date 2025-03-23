@@ -16,6 +16,7 @@ export type RootStackParamList = {
   StartRide: undefined;
   History: undefined;
   Profile: undefined;
+  SearchLocForBook: any;
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();

@@ -1,7 +1,7 @@
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import StorageService from './StorageService';
 
-const BASE_URL = 'https://3303-2405-201-580a-e07f-f0be-44bc-baf5-893f.ngrok-free.app/api';
+const BASE_URL = 'https://6794-49-43-128-131.ngrok-free.app/api/';
 
 class ApiClient {
   private static instance: ApiClient;
@@ -32,7 +32,7 @@ class ApiClient {
       async config => {
         const token = await StorageService.getItem('token');
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Authorization = `${token}`;
         }
         return config;
       },
@@ -76,13 +76,12 @@ class ApiClient {
     try {
       console.log('url', url);
       console.log('data', data);
-      const response = await this.api.post<T>(url, data);
-      console.log("response>>>", response);
+
       
+      const response = await this.api.post<T>(url, data);      
       return response.data;
     } catch (error) {
       console.log("error>>>", error);
-
       return ApiClient.handleError(error);
     }
   }

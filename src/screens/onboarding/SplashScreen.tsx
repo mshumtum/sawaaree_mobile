@@ -5,19 +5,21 @@ import colors from '../../assets/colors';
 import StorageService from '../../services/StorageService';
 import {navigate} from '../../navigation/NavigationService';
 import {getCurrentLocation} from '../../helper/utils';
+import {setMyLatLong, setMyLocation} from '../../store/slices/bookingSlice';
+import {useAppDispatch} from '../../store/hooks';
 
 const SplashScreen = () => {
+  const dispatch = useAppDispatch();
   useEffect(() => {
     StorageService.getItem('isLoggedIn').then(isLoggedIn => {
       console.log('IS>>>>>>.');
 
       if (!isLoggedIn) {
+        getCurrentLocationFun();
         setTimeout(() => {
           console.log('getCurrentLocationFun>>>>>>CALLED');
-
-          getCurrentLocationFun();
-          // navigate('Home');
-        }, 10000);
+          navigate('Home');
+        }, 4000);
       } else {
         setTimeout(() => {
           navigate('Login');
@@ -29,6 +31,11 @@ const SplashScreen = () => {
     getCurrentLocation()
       .then(location => {
         console.log('location>>', location);
+        let tempLocation = {
+          latitude: 30.707671813405632,
+          longitude: 76.71784222126007,
+        };
+        dispatch(setMyLatLong(tempLocation));
       })
       .catch(error => {
         console.log('error>>>>>', error);

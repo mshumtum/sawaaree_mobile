@@ -2,18 +2,19 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-
-import HomeScreen from '../screens/HomeScreen';
-import StartRideScreen from '../screens/StartRideScreen';
-import HistoryScreen from '../screens/HistoryScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import SignupScreen from '../screens/auth/SignupScreen';
-import VerifyOtpScreen from '../screens/auth/VerifyOtpScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import {
+  SplashScreen,
+  HomeScreen,
+  StartRideScreen,
+  HistoryScreen,
+  ProfileScreen,
+  LoginScreen,
+  SignupScreen,
+  VerifyOtpScreen,
+  ForgotPasswordScreen,
+  SearchLocForBook,
+} from '../screens';
 import {navigationRef, RootStackParamList} from './NavigationService';
-import SplashScreen from '../screens/onboarding/SplashScreen';
-
 const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
@@ -80,6 +81,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="StartRide"
           component={StartRideScreen}
+          options={{title: 'Start Ride'}}
+        />
+        <Stack.Screen
+          name="SearchLocForBook"
+          component={SearchLocForBook}
           options={{title: 'Start Ride'}}
         />
       </Stack.Navigator>
